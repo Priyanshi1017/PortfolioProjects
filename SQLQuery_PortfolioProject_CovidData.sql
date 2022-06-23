@@ -130,3 +130,15 @@ from CovidDeaths
 where location = 'India'
 group by year(date),month(date)
 order by 1
+
+--- storing a procedure which returns Total New Cases for Each Location when given Location as Parameter
+ALTER PROCEDURE NewCasesForEachMonth
+@Location nvarchar(100)
+AS
+select YEAR(date) as Year, Month(date) as Month,location,sum(new_cases)
+from CovidDeaths
+where new_cases is not null and location = @Location
+group by YEAR(date),Month(date),location
+order by 1,2
+--- can also be created and stored as view to create barchart for tracking new cases in each month
+EXEC NewCasesForEachMonth @Location= 'Spain'
