@@ -115,3 +115,18 @@ FROM CovidDeaths dea join CovidVaccinations vac
 where dea.continent is not null 
 
 select *,cast(RollingPeopleVaccinated as float)/population *100 as Rollingpeoplevacciated_percentage from #populationvaccinated
+
+--creating view to display maximumpeoplevaccinated in each location/country
+
+create View Maximumpeoplevaccinated as
+  select date,location,people_vaccinated,sum(cast(people_vaccinated as bigint)) over (PARTITION by location order by date) as Maximumpeoplevaccinated
+ from CovidVaccinations
+ where people_vaccinated is not null  
+ 
+ -- Total New Cases for each month in India
+
+select year(date) as Year,month(date) as Month,sum(new_cases) as Total_Case
+from CovidDeaths 
+where location = 'India'
+group by year(date),month(date)
+order by 1
