@@ -142,3 +142,20 @@ group by YEAR(date),Month(date),location
 order by 1,2
 --- can also be created and stored as view to create barchart for tracking new cases in each month
 EXEC NewCasesForEachMonth @Location= 'Spain'
+
+--- getting new first doses and new second doses on each day for each location 
+select new_vaccinations,people_fully_vaccinated,lag(people_fully_vaccinated) over (order by date ) as stepdown,
+---- for newfirstdoses in India using lag() function
+case
+when lag(people_fully_vaccinated) over (order by date) is null and people_fully_vaccinated is null then new_vaccinations
+when lag(people_fully_vaccinated) over (order by date) is null and people_fully_vaccinated is not null then cast(new_vaccinations as int) - cast(people_fully_vaccinated as int)
+when lag(people_fully_vaccinated) over (order by date) is not null
+then cast(new_vaccinations as int) - (cast(people_fully_vaccinated as int) - cast(lag(people_fully_vaccinated) over (order by date ) as int))
+end as NewFirstDoses,
+----- for newseconddoses in India 
+case 
+when lag(people_fully_vaccinated) over (order by date)  is not null then
+cast(people_fully_vaccinated as int)-cast(lag(people_fully_vaccinated) over (order by date ) as int)
+when lag(people_fully_vaccinated) over (order by date) is null then people_fully_vaccinated
+end as NewSecondDoses
+from CovidVaccinations where location = 'India'
