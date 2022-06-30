@@ -122,3 +122,8 @@ from EmployeeErrors
  select * from EmployeeSalary
 where EmployeeID in (select EmployeeID from EmployeeDemographics
                       where age>30)
+                      
+                      
+--- adding primary key constraint with clustered index on table EmployeeDemographics with column EmployeeID
+alter table EmployeeDemographics
+add CONSTRAINT PK_EmployeeID Primary Key CLUSTERED(EmployeeID)
