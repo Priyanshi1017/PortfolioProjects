@@ -127,3 +127,7 @@ where EmployeeID in (select EmployeeID from EmployeeDemographics
 --- adding primary key constraint with clustered index on table EmployeeDemographics with column EmployeeID
 alter table EmployeeDemographics
 add CONSTRAINT PK_EmployeeID Primary Key CLUSTERED(EmployeeID)
+
+---uniqueididentifier generator in sql - 16 bytes of date and hexadecimal number from 0-9 or a-f
+ DECLARE @UniqueID uniqueidentifier = NEWID();
+  SELECT @UniqueID AS Result
