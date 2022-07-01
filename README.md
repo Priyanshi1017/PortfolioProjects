@@ -1,1 +1,1 @@
-# PortfolioProjects
+# SQLJourney
